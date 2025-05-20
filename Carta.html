@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carta para Ti</title>
+</head>
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 5px;
+}
+
+body {
+  background: linear-gradient(135deg, #d0aaff, #f5e6ff);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Corazones */
+.heart {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #e91e63;
+  transform: rotate(-45deg);
+  animation: float 6s linear forwards;
+  opacity: 0.9;
+}
+.heart::before,
+.heart::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #e91e63;
+  border-radius: 50%;
+}
+.heart::before {
+  top: -10px;
+  left: 0;
+}
+.heart::after {
+  left: 10px;
+  top: 0;
+}
+
+/* Flores */
+.flower {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  animation: float 6s linear forwards;
+}
+.petal {
+  width: 10px;
+  height: 10px;
+  background: #ba68c8;
+  border-radius: 50%;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  transform-origin: center;
+}
+.petal:nth-child(1) { transform: rotate(0deg) translateY(-7px); }
+.petal:nth-child(2) { transform: rotate(90deg) translateY(-7px); }
+.petal:nth-child(3) { transform: rotate(180deg) translateY(-7px); }
+.petal:nth-child(4) { transform: rotate(270deg) translateY(-7px); }
+.center {
+  width: 6px;
+  height: 6px;
+  background: #6a1b9a;
+  border-radius: 50%;
+  position: absolute;
+  top: 7px;
+  left: 7px;
+}
+
+/* Animación de flotado */
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Carta */
+.card-container {
+  width: 300px;
+  height: 200px;
+  perspective: 1000px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: #f3e5f5;
+  color: #4a148c;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.front {
+  background: #ba68c8;
+  color: white;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+</style>
+<body>
+
+  <div class="background" id="background"></div>
+
+  <div class="card-container" onclick="flipCard()">
+    <div class="card" id="card">
+      <div class="card-face front">
+        <h2>💌 Dia de la Carta 💌</h2>
+      </div>
+      <div class="card-face back">
+        <h2>Para tu 💜</h2>
+        <center><p>"Sabes lo especial y unica que eres, no dejes que nada ni nadie te haga creer lo contrario"</p></center>
+        <img src="https://osaka.nyc3.cdn.digitaloceanspaces.com/GGF_s1_webp_o_18/sticker-fan_1741510_o.webp" alt="img" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function flipCard() {
+  const card = document.getElementById('card');
+  card.classList.toggle('flipped');
+}
+
+function createFloatingElement() {
+  const background = document.getElementById('background');
+  const type = Math.random() > 0.5 ? 'heart' : 'flower';
+
+  const el = document.createElement('div');
+  el.classList.add(type);
+
+  if (type === 'flower') {
+    for (let i = 0; i < 4; i++) {
+      const petal = document.createElement('div');
+      petal.classList.add('petal');
+      el.appendChild(petal);
+    }
+    const center = document.createElement('div');
+    center.classList.add('center');
+    el.appendChild(center);
+  }
+
+  el.style.left = Math.random() * window.innerWidth + 'px';
+  el.style.top = window.innerHeight + 'px';
+
+  background.appendChild(el);
+
+  // Eliminar después de la animación
+  setTimeout(() => {
+    el.remove();
+  }, 6000);
+}
+
+// Generar continuamente
+setInterval(createFloatingElement, 400);
+
+  </script>
+</body>
+</html>
